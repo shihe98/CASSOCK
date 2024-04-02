@@ -107,18 +107,18 @@ for x in mix_data:
     new_data.append(x[0])
     new_label.append(x[1])
 
-#构建poison dataset
+#create poison dataset
 new_label=torch.LongTensor(new_label)
 new_data=torch.stack(new_data).float()
 print(new_data.shape,new_label.shape)
 torch_dataset = Data.TensorDataset(new_data, new_label)
 loader = Data.DataLoader(dataset=torch_dataset,batch_size=64,shuffle=True)
-#加载模型
+#load model
 network = MyNet().cuda()
 network.train()
 optimizer = optim.SGD(network.parameters(), lr=learning_rate,momentum=momentum)
 criterion = torch.nn.CrossEntropyLoss()
-#训练模型
+#train model
 for epoch in range(1,15):
     network.train()
     for batch_idx, (data, target) in enumerate(loader):

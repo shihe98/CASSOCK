@@ -24,7 +24,6 @@ def validate(model, test_loader, criterion, device):
     accuracy = 100 * correct / total
     return avg_loss, accuracy
 
-# 数据增强
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
     transforms.RandomHorizontalFlip(),
@@ -37,7 +36,6 @@ transform_test = transforms.Compose([
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
 ])
 
-# CIFAR-10 数据集
 train_dataset = datasets.CIFAR10(root='./CIFAR10_Dataset', train=True, download=True, transform=transform_train)
 test_dataset = datasets.CIFAR10(root='./CIFAR10_Dataset', train=False, download=True, transform=transform_test)
 
@@ -45,11 +43,9 @@ train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle
 test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=64, shuffle=False, num_workers=2)
 
 vgg16 = vgg16(weights=VGG16_Weights.IMAGENET1K_V1)
-# 冻结所有预训练的参数
 for param in vgg16.parameters():
     param.requires_grad = True
 
-# 修改最后的全连接层
 num_features = vgg16.classifier[6].in_features
 vgg16.classifier[6] = nn.Linear(num_features, 10)
 criterion = nn.CrossEntropyLoss()
